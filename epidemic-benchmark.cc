@@ -6,21 +6,21 @@
 #include "ns3/mobility-module.h"
 #include "ns3/network-module.h"
 #include "ns3/wifi-module.h"
+#include "stats/stats.h"
 
 #include <iostream>
 
 using namespace ns3;
 
-uint64_t receivedPacket = 0;
-uint64_t sendedPacket = 0;
+statistics::Stats st;
 
 void SinkRxTrace(std::string context, Ptr<const Packet> pkt, const Address &addr){
-    receivedPacket++;
+    st.incrementReceivedPackets();
     std::cout<<"Packet received at "<<Simulator::Now().GetSeconds()<<" s\n";
 }
 
 void OnOffTxTrace(std::string context, Ptr<const Packet> pkt, const Address &addr) {
-    sendedPacket++;
+    st.incrementSendedPackets();
     std::cout<<"Packet sended at "<<Simulator::Now().GetSeconds()<<" s\n";
 }
 
@@ -207,7 +207,8 @@ int main(int argc, char* argv[]) {
     Simulator::Stop(Seconds(TotalTime));
     Simulator::Run();
 
-    std::cout << "Received packet: " << receivedPacket << std::endl;
+    std:: cout << "Sended Packets: " << st.getSendedPackets() << std::endl;
+    std:: cout << "Received Packets: " << st.getReceivedPackets() << std::endl;
 
     Simulator::Destroy();
     return 0;
