@@ -11,6 +11,20 @@
 
 using namespace ns3;
 
+uint64_t receivedPacket = 0;
+uint64_t sendedPacket = 0;
+
+void SinkRxTrace(std::string context, Ptr<const Packet> pkt, const Address &addr){
+    receivedPacket++;
+    std::cout<<"Packet received at "<<Simulator::Now().GetSeconds()<<" s\n";
+}
+
+void OnOffTxTrace(std::string context, Ptr<const Packet> pkt, const Address &addr) {
+    sendedPacket++;
+    std::cout<<"Packet sended at "<<Simulator::Now().GetSeconds()<<" s\n";
+}
+
+
 int main(int argc, char* argv[]) {
     // General parameters
     uint32_t nWifis = 50;
@@ -21,7 +35,8 @@ int main(int argc, char* argv[]) {
     bool appLogging = true;
 
     // Application parameters
-    double TotalTime = 200.0;
+    // double TotalTime = 200.0;
+    double TotalTime = 30.0;
     double dataStart = 10.0;
     double dataEnd = 14.0;
     uint32_t packetSize = 1024;
@@ -62,17 +77,15 @@ int main(int argc, char* argv[]) {
               << std::endl;
     std::cout << "Beacon interval: " << beaconInterval.GetSeconds() << " s" << std::endl;
 
-    /*
-     *       Enabling OnOffApplication and PacketSink logging
-     * */
-    if (appLogging)
-    {
-        LogComponentEnable("OnOffApplication", LOG_LEVEL_INFO);
-        LogComponentEnable("PacketSink", LOG_LEVEL_INFO);
-        LogComponentEnableAll(LOG_PREFIX_TIME);
-        LogComponentEnableAll(LOG_PREFIX_NODE);
-        LogComponentEnableAll(LOG_PREFIX_FUNC);
-    }
+    // Enabling UdpClient and UdpServer logging
+    // if (appLogging)
+    // {
+    //     LogComponentEnable("OnOffApplication", LOG_LEVEL_INFO);
+    //     LogComponentEnable("PacketSink", LOG_LEVEL_INFO);
+    //     LogComponentEnableAll(LOG_PREFIX_TIME);
+    //     LogComponentEnableAll(LOG_PREFIX_NODE);
+    //     LogComponentEnableAll(LOG_PREFIX_FUNC);
+    // }
 
     nodeContainer.Create(nWifis);
 
@@ -159,6 +172,10 @@ int main(int argc, char* argv[]) {
         PacketSinkHelper sink("ns3::UdpSocketFactory",
                               InetSocketAddress(Ipv4Address::GetAny(), 80));
         ApplicationContainer apps_sink = sink.Install(nodeContainer.Get(i));
+
+        Ptr<PacketSink> pktSink = StaticCast<PacketSink> (apps_sink.Get(0));
+        std::stringstream ss; ss << "Some information";
+        pktSink->TraceConnect("Rx", ss.str(), MakeCallback (&SinkRxTrace));
         apps_sink.Start(Seconds(0.0));
         apps_sink.Stop(Seconds(TotalTime));
     }
@@ -174,15 +191,24 @@ int main(int argc, char* argv[]) {
                                    Address(InetSocketAddress(interfaces.GetAddress(sink), 80)));
                 onoff1.SetConstantRate(DataRate("1024B/s"));
                 onoff1.SetAttribute("PacketSize", UintegerValue(packetSize));
-                ApplicationContainer apps1 = onoff1.Install(nodeContainer.Get(source));
-                apps1.Start(Seconds(dataStart));
-                apps1.Stop(Seconds(dataEnd));
+                ApplicationContainer app = onoff1.Install(nodeContainer.Get(source));
+
+                Ptr<PacketSink> pktOnOff = StaticCast<PacketSink> (app.Get(0));
+                std::stringstream ss; ss << "Some information";
+                pktOnOff->TraceConnect("Rx", ss.str(), MakeCallback (&OnOffTxTrace));
+                
+
+                app.Start(Seconds(dataStart));
+                app.Stop(Seconds(dataEnd));
             }
         }
     }
 
     Simulator::Stop(Seconds(TotalTime));
     Simulator::Run();
+
+    std::cout << "Received packet: " << receivedPacket << std::endl;
+
     Simulator::Destroy();
     return 0;
 }
