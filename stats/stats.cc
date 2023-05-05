@@ -11,22 +11,31 @@ uint64_t Stats::getReceivedPackets() {
 }
 
 uint64_t Stats::getSendedPackets() {
-    return this->receivedPackets;
+    return this->sendedPackets;
 }
 
 uint64_t Stats::getPacketLost() {
     return (this->sendedPackets - this->receivedPackets);
 }
 
-uint8_t Stats::getPacketLoss() {
-    return (this->sendedPackets - this->receivedPackets)/this->sendedPackets * 100;
+double Stats::getPacketLoss() {
+    return (double)(this->getPacketLost())/(double)(this->getSendedPackets())*100.0;
 }
 
 void Stats::incrementReceivedPackets() {
     this->receivedPackets++;
 }
 
-void Stats::incrementSendedPackets() {
-    this->sendedPackets++;
+void Stats::setSendedPackets(uint64_t sendedPackets) {
+    this->sendedPackets = sendedPackets;
+}
+
+std::ostream& operator<<(std::ostream& os, Stats& s) {
+    os << "[BENCHMARK]" << std::endl;
+    os << "Sended Packets: " << s.getSendedPackets() << std::endl;
+    os << "Received Packets: " << s.getReceivedPackets() << std::endl;
+    os << "Lost Packets: " << s.getPacketLost() << std::endl;
+    os << "Packet Loss: " << s.getPacketLoss() << "%" << std::endl;
+    return os;
 }
 }

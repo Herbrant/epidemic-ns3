@@ -12,10 +12,12 @@ public:
     uint64_t getReceivedPackets();
     uint64_t getSendedPackets();
     uint64_t getPacketLost();
-    uint8_t getPacketLoss();
+    double getPacketLoss();
 
     void incrementReceivedPackets();
-    void incrementSendedPackets();
+    void setSendedPackets(uint64_t sendedPackets);
 };
+
+std::ostream& operator<<(std::ostream& os, Stats& s);
 }
 #endif
