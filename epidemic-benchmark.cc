@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
               "in the original paper.  There are 50 nodes in an area of 1500 m x 300 m."
               " 45 nodes are selected to send a message of size 1KB to the other "
               "44 nodes. The total messages are 45 * 44 = 1980 messages.  The buffer "
-              "size is 2000 which is infinite in these scenarios.  The ranges for "
+              "size change after every iteration of the simulation from 0 to the maxQueueLength.  The ranges for "
               "the transmission are from 10 m to 250 m while the default is set to "
               "50 m.\n");
     cmd.AddValue("nWifis", "Number of \"extra\" Wifi nodes/devices", nWifis);
