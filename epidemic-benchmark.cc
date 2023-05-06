@@ -7,6 +7,7 @@
 #include "ns3/network-module.h"
 #include "ns3/wifi-module.h"
 #include "stats/stats.h"
+#include "ns3/gnuplot.h"
 
 #include <iostream>
 
@@ -22,6 +23,7 @@ void SinkRxTrace(std::string context, Ptr<const Packet> pkt, const Address &addr
 int main(int argc, char* argv[]) {
     // General parameters
     uint32_t nWifis = 50;
+    uint32_t maxQueueLength = 200;
     double txpDistance = 50.0;
     double nodeSpeed = 10.0;
     bool appLogging = false;
@@ -75,7 +77,37 @@ int main(int argc, char* argv[]) {
         LogComponentEnableAll(LOG_PREFIX_FUNC);
     }
 
-    for (uint64_t queueLength = 0; queueLength < 200; ++queueLength) {
+    // Gnuplot
+    std::string fileNameWithNoExtension = "data-loss-buffer-size";
+    std::string graphicsFileName        = fileNameWithNoExtension + ".png";
+    std::string plotFileName            = fileNameWithNoExtension + ".plt";
+    std::string plotTitle               = "Relation between data loss and buffer size";
+    //std::string dataTitle               = "";
+
+    // Instantiate the plot and set its title.
+    Gnuplot plot(graphicsFileName);
+    plot.SetTitle(plotTitle);
+
+    // Make the graphics file, which the plot file will create when it
+    // is used with Gnuplot, be a PNG file.
+    plot.SetTerminal("png");
+
+    // Set the labels for each axis.
+    plot.SetLegend("X Values", "Y Values");
+
+    // Set the range for the x axis.
+    std::stringstream xextra;
+    xextra << "set xrange [0:" << "+" << std::to_string(maxQueueLength) << "]";
+    plot.AppendExtra(xextra.str());
+
+
+    // Instantiate the dataset, set its title, and make the points be
+    // plotted along with connecting lines.
+    Gnuplot2dDataset dataset;
+    //dataset.SetTitle(dataTitle);
+    dataset.SetStyle(Gnuplot2dDataset::LINES_POINTS);
+
+    for (uint64_t queueLength = 0; queueLength < maxQueueLength; ++queueLength) {
         std::string tag = "queueLength: " + std::to_string(queueLength);
         st.setTag(tag);
         st.setReceivedPackets(0);
@@ -201,9 +233,22 @@ int main(int argc, char* argv[]) {
         Simulator::Run();
 
         std::cout << st << std::endl;
+        dataset.Add(queueLength, st.getPacketLoss());
 
         Simulator::Destroy();
     }
+
+    // Add the dataset to the plot.
+    plot.AddDataset(dataset);
+
+    // Open the plot file.
+    std::ofstream plotFile(plotFileName.c_str());
+
+    // Write the plot file.
+    plot.GenerateOutput(plotFile);
+
+    // Close the plot file.
+    plotFile.close();
 
     return 0;
 }
