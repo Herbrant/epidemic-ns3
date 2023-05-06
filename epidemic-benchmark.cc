@@ -80,6 +80,7 @@ int main(int argc, char* argv[]) {
             queueLength, queueEntryExpireTime, beaconInterval, maxHopCount, hopCountStep
         );
 
+        hcb.run();
     }
 
     return 0;
