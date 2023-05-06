@@ -51,7 +51,9 @@ void HopCountBenchmark::run() {
     dataset.SetTitle(dataTitle);
     dataset.SetStyle(Gnuplot2dDataset::LINES_POINTS);
 
-    for (uint64_t hopCount = 0; hopCount <= maxHopCount; hopCount += hopCountStep) {
+    dataset.Add(0, 100);
+
+    for (uint32_t hopCount = 1; hopCount <= maxHopCount; hopCount += hopCountStep) {
         std::string tag = "hopCount: " + std::to_string(hopCount);
         this->st.setTag(tag);
         this->st.setReceivedPackets(0);
@@ -139,8 +141,8 @@ void HopCountBenchmark::run() {
         * */
 
         // Sink or server setup
-        uint64_t num_source = 45;
-        uint64_t num_sink = 45;
+        uint32_t num_source = 45;
+        uint32_t num_sink = 45;
 
 
         for (uint32_t i = 0; i < num_sink; ++i) {

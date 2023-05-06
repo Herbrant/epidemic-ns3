@@ -51,7 +51,7 @@ void QueueLengthBenchmark::run() {
     dataset.SetTitle(dataTitle);
     dataset.SetStyle(Gnuplot2dDataset::LINES_POINTS);
 
-    for (uint64_t queueLength = 0; queueLength <= maxQueueLength; queueLength += queueStep) {
+    for (uint32_t queueLength = 0; queueLength <= maxQueueLength; queueLength += queueStep) {
         std::string tag = "queueLength: " + std::to_string(queueLength);
         this->st.setTag(tag);
         this->st.setReceivedPackets(0);
