@@ -53,6 +53,7 @@ int main(int argc, char* argv[]) {
     cmd.AddValue("packetSize", "The packet size", packetSize);
     cmd.AddValue("txpDistance", "Specify node's transmit range", txpDistance);
     cmd.AddValue("hopCount", "Specify number of hopCount", hopCount);
+    cmd.AddValue("maxQueueLength", "Specify number of maxQueueLength", maxQueueLength);
     cmd.AddValue("queueEntryExpireTime", "Specify queue Entry Expire Time", queueEntryExpireTime);
     cmd.AddValue("beaconInterval", "Specify beaconInterval", beaconInterval);
 
@@ -63,9 +64,10 @@ int main(int argc, char* argv[]) {
     std::cout << "Packet size: " << packetSize << " b" << std::endl;
     std::cout << "Transmission distance: " << txpDistance << " m" << std::endl;
     std::cout << "Hop count: " << hopCount << std::endl;
+    std::cout << "Max Queue length: " << maxQueueLength << std::endl;
     std::cout << "Queue entry expire time: " << queueEntryExpireTime.GetSeconds() << " s"
               << std::endl;
-    std::cout << "Beacon interval: " << beaconInterval.GetSeconds() << " s" << std::endl;
+    std::cout << "Beacon interval: " << beaconInterval.GetSeconds() << " s" << std::endl << std::endl;
 
     // Enabling UdpClient and UdpServer logging
     if (appLogging)
@@ -78,11 +80,11 @@ int main(int argc, char* argv[]) {
     }
 
     // Gnuplot
-    std::string fileNameWithNoExtension = "data-loss-buffer-size";
+    std::string fileNameWithNoExtension = "data-loss-buffer-size" + std::to_string(maxQueueLength);
     std::string graphicsFileName        = fileNameWithNoExtension + ".png";
     std::string plotFileName            = fileNameWithNoExtension + ".plt";
     std::string plotTitle               = "Relation between data loss and buffer size";
-    //std::string dataTitle               = "";
+    std::string dataTitle               = "Packet Loss %";
 
     // Instantiate the plot and set its title.
     Gnuplot plot(graphicsFileName);
@@ -93,18 +95,20 @@ int main(int argc, char* argv[]) {
     plot.SetTerminal("png");
 
     // Set the labels for each axis.
-    plot.SetLegend("X Values", "Y Values");
+    plot.SetLegend("Buffer size (packets)", "Packet Loss %");
 
     // Set the range for the x axis.
-    std::stringstream xextra;
-    xextra << "set xrange [0:" << "+" << std::to_string(maxQueueLength) << "]";
-    plot.AppendExtra(xextra.str());
+    std::stringstream extra;
+    extra << "set xrange [0:" << "+" << std::to_string(maxQueueLength) << "]";
+    plot.AppendExtra(extra.str());
 
+    // Set terminal resolution
+    plot.SetTerminal("png size 1920,1080");
 
     // Instantiate the dataset, set its title, and make the points be
     // plotted along with connecting lines.
     Gnuplot2dDataset dataset;
-    //dataset.SetTitle(dataTitle);
+    dataset.SetTitle(dataTitle);
     dataset.SetStyle(Gnuplot2dDataset::LINES_POINTS);
 
     for (uint64_t queueLength = 0; queueLength < maxQueueLength; ++queueLength) {
