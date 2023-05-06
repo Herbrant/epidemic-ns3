@@ -12,6 +12,11 @@ Then run the simulation with
 docker run -t ghcr.io/herbrant/epidemic-ns3:main "--PrintHelp"
 ```
 
+If you want to get the gnuplot's files created during the simulation, bind-mount an host's directory into the container at `/gnuplot/`
+```bash
+docker run -t -v <your-host-path>:/gnuplot/ ghcr.io/herbrant/epidemic-ns3:main
+```
+
 ## Building
 ### Requirements
 - [ns3 v3.38](https://www.nsnam.org)
@@ -62,8 +67,40 @@ General Arguments:
     --PrintHelp:                 Print this help message.
 ```
 
-## Analysis
-[TODO]
+## Examples
+### Queue Length Benchmark
+The QueueLengthBenchmark component allows to verify the relationship between the queue length and the packet loss.
+For this example I chose the following parameters:
+- maxQueueLength = 2000
+- queueStep = 5
+- TotalTime = 200
+
+You can run it with
+```bash
+docker run -t ghcr.io/herbrant/epidemic-ns3:main "--hopCountBenchmark=false --maxQueueLength=2000 --queueStep=5"
+```
+
+![](./examples/queue-length-benchmark/total-time-200/data-loss-buffer-size2000.png)
+
+The next step could be to fix the TotalTime to 400. In this case the packets have more time to propagate. For this reason, the following graph shows a less packet loss.
+
+![]()
+
+## HopCount Benchmark
+The HopCountBenchmark component allows to verify if there is a relationship between HopCount and packet loss.
+For this example I chose the following parameters:
+- maxHopCount = 50
+- hopCountStep = 1
+- TotalTime = 200
+
+You can run it with
+```bash
+docker run -t ghcr.io/herbrant/epidemic-ns3:main "--queueLengthBenchmark=false --maxHopCount=50 --hopCountStep=1"
+```
+
+Furthermore we can repeat the experiment with TotalTime equals to 400 as we did before.
+
+![]()
 
 ## References
 - [ns3](https://www.nsnam.org)
