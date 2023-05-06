@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
     // General parameters
     uint32_t nWifis = 50;
     uint32_t maxQueueLength = 200;
+    uint32_t queueStep = 1;
     double txpDistance = 50.0;
     double nodeSpeed = 10.0;
     bool appLogging = false;
@@ -54,6 +55,7 @@ int main(int argc, char* argv[]) {
     cmd.AddValue("txpDistance", "Specify node's transmit range", txpDistance);
     cmd.AddValue("hopCount", "Specify number of hopCount", hopCount);
     cmd.AddValue("maxQueueLength", "Specify number of maxQueueLength", maxQueueLength);
+    cmd.AddValue("queueStep", "Specify number of queueStep", queueStep);
     cmd.AddValue("queueEntryExpireTime", "Specify queue Entry Expire Time", queueEntryExpireTime);
     cmd.AddValue("beaconInterval", "Specify beaconInterval", beaconInterval);
 
@@ -111,7 +113,7 @@ int main(int argc, char* argv[]) {
     dataset.SetTitle(dataTitle);
     dataset.SetStyle(Gnuplot2dDataset::LINES_POINTS);
 
-    for (uint64_t queueLength = 0; queueLength < maxQueueLength; ++queueLength) {
+    for (uint64_t queueLength = 0; queueLength < maxQueueLength; queueLength += queueStep) {
         std::string tag = "queueLength: " + std::to_string(queueLength);
         st.setTag(tag);
         st.setReceivedPackets(0);
