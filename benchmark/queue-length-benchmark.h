@@ -9,7 +9,7 @@ public:
 
     QueueLengthBenchmark(
         uint32_t nWifis, double txpDistance, double nodeSpeed, 
-        bool appLogging, uint32_t packetSize, uint32_t hopCount, Time queueEntryExpireTime,
+        bool appLogging, uint32_t packetSize, uint32_t hopCount, uint32_t queueLength, Time queueEntryExpireTime,
         Time beaconInterval, uint32_t maxQueueLength, uint32_t queueStep
     );
     

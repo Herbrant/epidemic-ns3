@@ -1,5 +1,5 @@
 set(main_src epidemic-benchmark)
-set(header_files protocol/epidemic-helper protocol/epidemic-packet-queue protocol/epidemic-packet protocol/epidemic-routing-protocol protocol/epidemic-tag stats/stats benchmark/benchmark benchmark/queue-length-benchmark)
+set(header_files protocol/epidemic-helper protocol/epidemic-packet-queue protocol/epidemic-packet protocol/epidemic-routing-protocol protocol/epidemic-tag stats/stats benchmark/benchmark benchmark/queue-length-benchmark benchmark/hop-count-benchmark)
 set(source_files ${main_src} ${header_files})
 set(target_prefix scratch_epidemic-ns3_)
 

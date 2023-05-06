@@ -1,16 +1,16 @@
-#include "queue-length-benchmark.h"
+#include "hop-count-benchmark.h"
 
-QueueLengthBenchmark::QueueLengthBenchmark(
+HopCountBenchmark::HopCountBenchmark(
     uint32_t nWifis, double txpDistance, double nodeSpeed, 
-    bool appLogging, uint32_t packetSize, uint32_t hopCount, uint32_t queueLength, 
-    Time queueEntryExpireTime,  Time beaconInterval, uint32_t maxQueueLength, uint32_t queueStep) :  
+    bool appLogging, uint32_t packetSize, uint32_t hopCount, uint32_t queueLength, Time queueEntryExpireTime, 
+    Time beaconInterval, uint32_t maxHopCount, uint32_t hopCountStep) :  
     Benchmark(nWifis, txpDistance, nodeSpeed, appLogging, packetSize, hopCount, queueLength, queueEntryExpireTime, beaconInterval) {   
     
-    this->maxQueueLength = maxQueueLength;
-    this->queueStep = queueStep;
+    this->maxHopCount = maxHopCount;
+    this->hopCountStep = hopCountStep;
 }
 
-void QueueLengthBenchmark::run() {
+void HopCountBenchmark::run() {
     if (appLogging) {
         LogComponentEnable("OnOffApplication", LOG_LEVEL_INFO);
         LogComponentEnable("PacketSink", LOG_LEVEL_INFO);
@@ -20,7 +20,7 @@ void QueueLengthBenchmark::run() {
     }
 
     // Gnuplot
-    std::string fileNameWithNoExtension = "data-loss-buffer-size" + std::to_string(maxQueueLength);
+    std::string fileNameWithNoExtension = "data-loss-hop-count" + std::to_string(maxHopCount);
     std::string graphicsFileName        = fileNameWithNoExtension + ".png";
     std::string plotFileName            = fileNameWithNoExtension + ".plt";
     std::string plotTitle               = "Relation between data loss and buffer size";
@@ -35,11 +35,11 @@ void QueueLengthBenchmark::run() {
     plot.SetTerminal("png");
 
     // Set the labels for each axis.
-    plot.SetLegend("Buffer size (packets)", "Packet Loss %");
+    plot.SetLegend("HopCount", "Packet Loss %");
 
     // Set the range for the x axis.
     std::stringstream extra;
-    extra << "set xrange [0:" << "+" << std::to_string(maxQueueLength) << "]";
+    extra << "set xrange [0:" << "+" << std::to_string(maxHopCount) << "]";
     plot.AppendExtra(extra.str());
 
     // Set terminal resolution
@@ -51,8 +51,8 @@ void QueueLengthBenchmark::run() {
     dataset.SetTitle(dataTitle);
     dataset.SetStyle(Gnuplot2dDataset::LINES_POINTS);
 
-    for (uint64_t queueLength = 0; queueLength < maxQueueLength; queueLength += queueStep) {
-        std::string tag = "queueLength: " + std::to_string(queueLength);
+    for (uint64_t hopCount = 0; hopCount < maxHopCount; hopCount += hopCountStep) {
+        std::string tag = "hopCount: " + std::to_string(hopCount);
         this->st.setTag(tag);
         this->st.setReceivedPackets(0);
         this->st.setSendedPackets(0);
@@ -150,7 +150,7 @@ void QueueLengthBenchmark::run() {
 
             Ptr<PacketSink> pktSink = StaticCast<PacketSink> (apps_sink.Get(0));
             std::stringstream ss; ss << "Sink Application Callback";
-            pktSink->TraceConnect("Rx", ss.str(), MakeCallback (&QueueLengthBenchmark::SinkRxTrace, this));
+            pktSink->TraceConnect("Rx", ss.str(), MakeCallback (&HopCountBenchmark::SinkRxTrace, this));
             apps_sink.Start(Seconds(0.0));
             apps_sink.Stop(Seconds(TotalTime));
         }
@@ -195,10 +195,9 @@ void QueueLengthBenchmark::run() {
     plotFile.close();
 }
 
-std::ostream& operator<<(std::ostream& os, QueueLengthBenchmark &b) {
+std::ostream& operator<<(std::ostream& os, HopCountBenchmark &b) {
     operator<<(os, (Benchmark&)b);
-    os << "Max Queue length: " << b.maxQueueLength << std::endl;
-    os << "Queue Step: " << b.queueStep << std::endl;
+    os << "Max HopCount: " << b.maxHopCount << std::endl;
+    os << "HopCount Step: " << b.hopCountStep << std::endl;
     return os;
 }
-

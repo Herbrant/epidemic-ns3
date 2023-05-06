@@ -2,8 +2,8 @@
 
 Benchmark::Benchmark(
         uint32_t nWifis, double txpDistance,double nodeSpeed, 
-        bool appLogging, uint32_t packetSize, uint32_t hopCount, Time queueEntryExpireTime, 
-        Time beaconInterval) {
+        bool appLogging, uint32_t packetSize, uint32_t hopCount, uint32_t queueLength, 
+        Time queueEntryExpireTime, Time beaconInterval) {
     
     this->nWifis = nWifis;
     this->txpDistance = txpDistance;
@@ -11,6 +11,7 @@ Benchmark::Benchmark(
     this->appLogging = appLogging;
     this->packetSize = packetSize;
     this->hopCount = hopCount;
+    this->queueLength = queueLength;
     this->queueEntryExpireTime = queueEntryExpireTime;
     this->beaconInterval = beaconInterval;
     this->TotalTime = 200;
