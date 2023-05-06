@@ -177,7 +177,7 @@ void HopCountBenchmark::run() {
         Simulator::Run();
 
         std::cout << st << std::endl;
-        dataset.Add(queueLength, this->st.getPacketLoss());
+        dataset.Add(hopCount, this->st.getPacketLoss());
 
         Simulator::Destroy();
     }
