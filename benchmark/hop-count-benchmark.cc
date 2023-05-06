@@ -51,7 +51,7 @@ void HopCountBenchmark::run() {
     dataset.SetTitle(dataTitle);
     dataset.SetStyle(Gnuplot2dDataset::LINES_POINTS);
 
-    for (uint64_t hopCount = 0; hopCount < maxHopCount; hopCount += hopCountStep) {
+    for (uint64_t hopCount = 0; hopCount <= maxHopCount; hopCount += hopCountStep) {
         std::string tag = "hopCount: " + std::to_string(hopCount);
         this->st.setTag(tag);
         this->st.setReceivedPackets(0);
