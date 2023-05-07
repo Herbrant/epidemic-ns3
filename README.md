@@ -1,5 +1,5 @@
 # epidemic-ns3
-This is a benchmark tool for [Epidemic routing protocol](http://issg.cs.duke.edu/epidemic/epidemic.pdf) implemented using [ns3](https://www.nsnam.org).
+This is a benchmark tool for the [Epidemic routing protocol](http://issg.cs.duke.edu/epidemic/epidemic.pdf) implemented using [ns3](https://www.nsnam.org).
 
 ## Running using docker (recommended)
 First of all pull the docker image:
