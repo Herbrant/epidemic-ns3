@@ -84,7 +84,7 @@ docker run -t ghcr.io/herbrant/epidemic-ns3:main "--hopCountBenchmark=false --ma
 
 The next step could be to fix the TotalTime to 400. In this case the packets have more time to propagate. For this reason, the following graph shows a less packet loss.
 
-![]()
+![](./examples/queue-length-benchmark/total-time-400/data-loss-buffer-size2000.png)
 
 ## HopCount Benchmark
 The HopCountBenchmark component allows to verify if there is a relationship between HopCount and packet loss.
@@ -93,6 +93,8 @@ For this example I chose the following parameters:
 - hopCountStep = 1
 - TotalTime = 200
 
+![](./examples/hop-count-benchmark/total-time-200/data-loss-hop-count50.png)
+
 You can run it with
 ```bash
 docker run -t ghcr.io/herbrant/epidemic-ns3:main "--queueLengthBenchmark=false --maxHopCount=50 --hopCountStep=1"
@@ -100,7 +102,7 @@ docker run -t ghcr.io/herbrant/epidemic-ns3:main "--queueLengthBenchmark=false -
 
 Furthermore we can repeat the experiment with TotalTime equals to 400 as we did before.
 
-![]()
+![](./examples/hop-count-benchmark/total-time-400/data-loss-hop-count50.png)
 
 ## References
 - [ns3](https://www.nsnam.org)
