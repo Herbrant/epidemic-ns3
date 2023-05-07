@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
     cmd.Parse(argc, argv);
 
     if (queueLengthBenchmark) {
-        std::cout << "###### QUEUE LENGTH BENCHMARK" << "#####" << std::endl;
+        std::cout << "###### QUEUE LENGTH BENCHMARK #####" << std::endl;
         QueueLengthBenchmark qlb(
             nWifis, txpDistance, nodeSpeed, appLogging, packetSize, hopCount, 
             queueLength, queueEntryExpireTime, beaconInterval, maxQueueLength, queueStep
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (hopCountBenchmark) {
-        std::cout << "###### HOPCOUNT BENCHMARK" << "#####" << std::endl;
+        std::cout << "###### HOPCOUNT BENCHMARK #####" << std::endl;
         HopCountBenchmark hcb(
             nWifis, txpDistance, nodeSpeed, appLogging, packetSize, hopCount, 
             queueLength, queueEntryExpireTime, beaconInterval, maxHopCount, hopCountStep

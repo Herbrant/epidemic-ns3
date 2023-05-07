@@ -23,7 +23,7 @@ void QueueLengthBenchmark::run() {
     std::string fileNameWithNoExtension = "data-loss-buffer-size" + std::to_string(maxQueueLength);
     std::string graphicsFileName        = fileNameWithNoExtension + ".png";
     std::string plotFileName            = fileNameWithNoExtension + ".plt";
-    std::string plotTitle               = "Relation between data loss and buffer size";
+    std::string plotTitle               = "Relationship between data loss and buffer size";
     std::string dataTitle               = "Packet Loss %";
 
     // Instantiate the plot and set its title.
