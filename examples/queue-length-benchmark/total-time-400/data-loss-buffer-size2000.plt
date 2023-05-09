@@ -1,6 +1,6 @@
 set terminal png size 1920,1080
 set output "data-loss-buffer-size2000.png"
-set title "Relation between data loss and buffer size"
+set title "Relationship between data loss and buffer size"
 set xlabel "Buffer size (packets)"
 set ylabel "Packet Loss %"
 
